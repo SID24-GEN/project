@@ -36,7 +36,7 @@ House Price Prediction
 ## Project Structure
 
 ```text
-Project Folder/
+project/
 │
 ├── app.py                    # Flask application
 ├── requirements.txt          # Python dependencies
@@ -86,7 +86,7 @@ Project Folder/
 
 ```bash
 git clone https://github.com/SID24-GEN/project.git
-cd house_price_predictor
+cd project
 ```
 
 ### 2. Create a virtual environment
