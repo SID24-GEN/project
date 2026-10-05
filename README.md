@@ -54,9 +54,6 @@ Project Folder/
 ├── models/
 │   └── house_model.pkl       # Trained model
 │
-├── utils/
-│   ├── __init__.py
-│   └── validation.py         # Input/data validation
 │
 ├── templates/
 │   └── index.html            # Web interface
