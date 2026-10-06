@@ -92,13 +92,12 @@ def train_model():
 # ---------------------------------------
 
 def save_model(model):
-
-	os.makedirs("models", exist_ok=True)
-
-	with open(MODEL_PATH, "wb") as file:
-		pickle.dump(model, file)
-
-	print(f"Model saved to: {MODEL_PATH}")
+	
+    os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+	
+    with open(MODEL_PATH, "wb") as file:
+		
+        pickle.dump(model, file)
 
 
 # ---------------------------------------
