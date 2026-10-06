@@ -62,8 +62,7 @@ Project Folder/
 │   └── style.css             # Web styling
 │
 └── tests/
-    ├── test_model.py         # Model tests
-    └── test_validation.py    # Validation tests
+    └── test_model.py     # Model tests
 ```
 
 ## Technologies Used
