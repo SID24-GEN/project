@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Mall Customer Segmentation</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+  <div class="background-shape shape-one"></div>
+  <div class="background-shape shape-two"></div>
+
+
+  <main class="page-wrapper">
+
+    <!-- Navbar -->
+
+    <header class="navbar">
+
+      <div class="brand">
+
+        <div class="brand-icon">S</div>
+
+        <div>
+          <h2>SegmentIQ</h2>
+          <span>Customer Segmentation</span>
+        </div>
+
+      </div>
+
+      <div class="model-status">
+        <span class="status-dot"></span>
+        Model Online
+      </div>
+
+    </header>
+
+
+    <!-- Main Card -->
+
+    <section class="predictor-card">
+
+      <!-- Left panel -->
+
+      <div class="intro-panel">
+
+        <span class="eyebrow">UNSUPERVISED LEARNING</span>
+
+        <h1>
+          Know your
+          <span>customers.</span>
+        </h1>
+
+        <p class="intro-text">
+          Enter a mall customer's age, annual income and spending
+          score and the K-Means model will place them in one of
+          five customer segments.
+        </p>
+
+        <div class="feature-list">
+
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>
+              <strong>K-Means Clustering</strong>
+              <p>Five segments learned from 200 customers.</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>
+              <strong>Chosen with Evidence</strong>
+              <p>Cluster count picked with the elbow method and silhouette score.</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>
+              <strong>Marketing Ready</strong>
+              <p>Each segment comes with a suggested strategy.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="intro-footer">
+          <span>Model: <strong>K-Means (k = 5)</strong></span>
+          <span class="separator">•</span>
+          <span>Version 1.0</span>
+        </div>
+
+      </div>
+
+
+      <!-- Right panel -->
+
+      <div class="form-panel">
+
+        <div class="form-header">
+
+          <span class="form-label">CUSTOMER DETAILS</span>
+
+          <h2>Find the segment</h2>
+
+          <p>Fill in the details below.</p>
+
+        </div>
+
+
+        <form action="/predict" method="POST" class="prediction-form">
+
+          <div class="input-group">
+            <label for="age">Age</label>
+            <div class="input-wrapper">
+              <input type="number" id="age" name="age" placeholder="35"
+                     min="18" max="100" step="1"
+                     value="{{ request.form.get('age', '') }}" required>
+              <span class="input-unit">Years</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="income">Annual Income</label>
+            <div class="input-wrapper">
+              <input type="number" id="income" name="income" placeholder="60"
+                     min="0" max="500" step="0.1"
+                     value="{{ request.form.get('income', '') }}" required>
+              <span class="input-unit">k$</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="spending">Spending Score</label>
+            <div class="input-wrapper">
+              <input type="number" id="spending" name="spending" placeholder="50"
+                     min="1" max="100" step="1"
+                     value="{{ request.form.get('spending', '') }}" required>
+              <span class="input-unit">1-100</span>
+            </div>
+          </div>
+
+          <button type="submit" class="predict-button">
+            <span>Find Customer Segment</span>
+            <span class="button-arrow">→</span>
+          </button>
+
+        </form>
+
+
+        <!-- Errors -->
+
+        {% if errors %}
+
+          <div class="message-box error-box">
+
+            <div class="message-icon">!</div>
+
+            <div>
+              <h3>Please check your input</h3>
+
+              {% for error in errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+
+          </div>
+
+        {% endif %}
+
+
+        <!-- Result -->
+
+        {% if segment %}
+
+          <div class="result-card">
+
+            <div class="result-top">
+              <span>CUSTOMER SEGMENT</span>
+              <div class="result-icon">✓</div>
+            </div>
+
+            <div class="segment-badge">{{ segment.name }}</div>
+
+            <p class="segment-meta">
+              Typical profile: age {{ segment.avg_age }},
+              income {{ segment.avg_income }}k$,
+              spending score {{ segment.avg_spending }}
+            </p>
+
+            <p class="result-note">{{ segment.strategy }}</p>
+
+          </div>
+
+        {% endif %}
+
+      </div>
+
+    </section>
+
+
+    <!-- Segment overview -->
+
+    <section class="insights">
+
+      <h2>Segment overview</h2>
+
+      <p>Average profile and suggested marketing action for each segment.</p>
+
+      <table class="segment-table">
+
+        <thead>
+          <tr>
+            <th>Segment</th>
+            <th>Customers</th>
+            <th>Avg age</th>
+            <th>Avg income (k$)</th>
+            <th>Avg spending</th>
+            <th>Suggested action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for p in profiles %}
+            <tr>
+              <td><strong>{{ p.name }}</strong></td>
+              <td>{{ p.size }}</td>
+              <td>{{ p.avg_age }}</td>
+              <td>{{ p.avg_income }}</td>
+              <td>{{ p.avg_spending }}</td>
+              <td class="strategy">{{ p.strategy }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+
+      <div class="plot-grid">
+        <img src="{{ url_for('static', filename='plots/elbow.png') }}" alt="Elbow method plot">
+        <img src="{{ url_for('static', filename='plots/silhouette.png') }}" alt="Silhouette score plot">
+        <img src="{{ url_for('static', filename='plots/segments.png') }}" alt="Customer segments plot">
+      </div>
+
+    </section>
+
+
+    <footer class="footer">
+      <span>Mall Customer Segmentation</span>
+      <span>Built with Python, Pandas, Scikit-learn, Seaborn and Flask</span>
+    </footer>
+
+  </main>
+
+</body>
+
+</html>
